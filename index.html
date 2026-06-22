@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Forest Quest — Your Cozy Life Adventure</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <!-- ── SIDEBAR NAV ── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-icon">🌲</span>
+      <span class="brand-name">Forest Quest</span>
+    </div>
+    <nav class="sidebar-nav">
+      <button class="nav-btn active" data-tab="dashboard">
+        <span class="nav-icon">🏡</span><span>Home</span>
+      </button>
+      <button class="nav-btn" data-tab="tasks">
+        <span class="nav-icon">✨</span><span>Quests</span>
+      </button>
+      <button class="nav-btn" data-tab="shop">
+        <span class="nav-icon">🛍️</span><span>Rewards</span>
+      </button>
+      <button class="nav-btn" data-tab="forest">
+        <span class="nav-icon">🌿</span><span>My Forest</span>
+      </button>
+      <button class="nav-btn" data-tab="achievements">
+        <span class="nav-icon">🏅</span><span>Badges</span>
+      </button>
+      <button class="nav-btn" data-tab="trends">
+        <span class="nav-icon">📊</span><span>Trends</span>
+      </button>
+    </nav>
+    <div class="sidebar-player">
+      <div class="player-avatar" id="sidebarAvatar">🧝</div>
+      <div class="player-info">
+        <div class="player-name" id="sidebarName">Adventurer</div>
+        <div class="player-level">Level <span id="sidebarLevel">1</span></div>
+      </div>
+      <button class="settings-btn" id="openSettings" title="Settings">⚙️</button>
+    </div>
+  </aside>
+
+  <!-- ── MOBILE HEADER ── -->
+  <header class="mobile-header">
+    <button class="hamburger" id="hamburger">☰</button>
+    <span class="mobile-brand">🌲 Forest Quest</span>
+    <div class="mobile-coins">🪙 <span id="mobileCoins">0</span></div>
+  </header>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- ── MAIN CONTENT ── -->
+  <main class="main-content">
+
+    <!-- ═══════════════════ DASHBOARD ═══════════════════ -->
+    <section class="tab-panel active" id="tab-dashboard">
+      <div class="page-header">
+        <h1 class="page-title">Welcome back, <span id="greetName">Adventurer</span>! 🌸</h1>
+        <p class="page-subtitle" id="dateDisplay"></p>
+      </div>
+
+      <!-- Stats Row -->
+      <div class="stats-grid">
+        <div class="stat-card level-card">
+          <div class="stat-icon">⭐</div>
+          <div class="stat-info">
+            <div class="stat-label">Level</div>
+            <div class="stat-value" id="dashLevel">1</div>
+          </div>
+        </div>
+        <div class="stat-card xp-card">
+          <div class="stat-icon">✨</div>
+          <div class="stat-info">
+            <div class="stat-label">Total XP</div>
+            <div class="stat-value" id="dashXP">0</div>
+          </div>
+        </div>
+        <div class="stat-card coins-card">
+          <div class="stat-icon">🪙</div>
+          <div class="stat-info">
+            <div class="stat-label">Coins</div>
+            <div class="stat-value" id="dashCoins">0</div>
+          </div>
+        </div>
+        <div class="stat-card streak-card">
+          <div class="stat-icon">🔥</div>
+          <div class="stat-info">
+            <div class="stat-label">Day Streak</div>
+            <div class="stat-value" id="dashStreak">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- XP Progress Bar -->
+      <div class="xp-bar-section card">
+        <div class="xp-bar-header">
+          <span>Level <span id="xpBarLevel">1</span></span>
+          <span id="xpBarText">0 / 100 XP</span>
+          <span>Level <span id="xpBarNext">2</span></span>
+        </div>
+        <div class="xp-bar-track">
+          <div class="xp-bar-fill" id="xpBarFill"></div>
+          <div class="xp-bar-sparkle" id="xpSparkle"></div>
+        </div>
+      </div>
+
+      <!-- Today's Quests -->
+      <div class="dashboard-grid">
+        <div class="card todays-quests">
+          <div class="card-header">
+            <h2 class="card-title">Today's Quests</h2>
+            <span class="quest-count" id="todayCount">0 done</span>
+          </div>
+          <div class="today-list" id="todayList">
+            <div class="empty-state">
+              <div class="empty-icon">🌱</div>
+              <p>No quests yet! Head to Quests to add your first task.</p>
+            </div>
+          </div>
+          <button class="btn btn-primary add-quest-quick" id="quickAddBtn">+ Add a Quest</button>
+        </div>
+
+        <!-- Streak Calendar -->
+        <div class="card streak-calendar-card">
+          <div class="card-header">
+            <h2 class="card-title">Streak Calendar</h2>
+            <span class="streak-flame">🔥 <span id="calStreak">0</span> days</span>
+          </div>
+          <div class="streak-calendar" id="streakCalendar"></div>
+        </div>
+      </div>
+
+      <!-- Recent Achievements -->
+      <div class="card recent-achievements">
+        <div class="card-header">
+          <h2 class="card-title">Recent Badges</h2>
+          <button class="btn btn-ghost" data-tab-link="achievements">View All →</button>
+        </div>
+        <div class="recent-badges-list" id="recentBadges">
+          <div class="empty-state small">
+            <p>Complete quests to earn your first badge! 🏅</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════ QUESTS (TASKS) ═══════════════════ -->
+    <section class="tab-panel" id="tab-tasks">
+      <div class="page-header">
+        <h1 class="page-title">Quests ✨</h1>
+        <button class="btn btn-primary" id="openAddTask">+ New Quest</button>
+      </div>
+
+      <!-- Category Filter -->
+      <div class="category-filter" id="categoryFilter">
+        <button class="filter-btn active" data-cat="all">All</button>
+        <button class="filter-btn" data-cat="Health">🌿 Health</button>
+        <button class="filter-btn" data-cat="Learning">📚 Learning</button>
+        <button class="filter-btn" data-cat="Chores">🏠 Chores</button>
+        <button class="filter-btn" data-cat="Fitness">💪 Fitness</button>
+        <button class="filter-btn" data-cat="Creativity">🎨 Creativity</button>
+        <button class="filter-btn" data-cat="Social">💬 Social</button>
+        <button class="filter-btn" data-cat="Mindfulness">🧘 Mindfulness</button>
+        <button class="filter-btn" data-cat="Other">🌟 Other</button>
+      </div>
+
+      <!-- Task List -->
+      <div class="task-list" id="taskList">
+        <div class="empty-state">
+          <div class="empty-icon">🗺️</div>
+          <h3>Your adventure awaits!</h3>
+          <p>Create your first quest to start earning XP and coins.</p>
+          <button class="btn btn-primary" id="openAddTaskEmpty">+ Create First Quest</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════ SHOP / REWARDS ═══════════════════ -->
+    <section class="tab-panel" id="tab-shop">
+      <div class="page-header">
+        <h1 class="page-title">Rewards Shop 🛍️</h1>
+        <div class="shop-header-right">
+          <div class="coin-balance-display">🪙 <span id="shopCoins">0</span> coins</div>
+          <button class="btn btn-primary" id="openAddReward">+ New Reward</button>
+        </div>
+      </div>
+
+      <div class="reward-list" id="rewardList">
+        <div class="empty-state">
+          <div class="empty-icon">🎁</div>
+          <h3>Build your reward shelf!</h3>
+          <p>Add things you love — candy, game time, a movie night — and redeem them with earned coins.</p>
+          <button class="btn btn-primary" id="openAddRewardEmpty">+ Add First Reward</button>
+        </div>
+      </div>
+
+      <!-- Redemption History -->
+      <div class="card redemption-history" id="redemptionHistoryCard" style="display:none">
+        <div class="card-header">
+          <h2 class="card-title">Redemption History</h2>
+        </div>
+        <div class="redemption-list" id="redemptionList"></div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════ FOREST ═══════════════════ -->
+    <section class="tab-panel" id="tab-forest">
+      <div class="page-header">
+        <h1 class="page-title">My Forest 🌿</h1>
+        <p class="page-subtitle">Your forest grows with every productive day.</p>
+      </div>
+      <div class="forest-stats-row">
+        <div class="forest-stat">🌳 <span id="forestTrees">0</span> Trees</div>
+        <div class="forest-stat">🌸 <span id="forestFlowers">0</span> Flowers</div>
+        <div class="forest-stat">🦋 <span id="forestAnimals">0</span> Visitors</div>
+        <div class="forest-stat">📅 <span id="forestDays">0</span> Days Grown</div>
+      </div>
+      <div class="forest-scene" id="forestScene">
+        <div class="forest-sky" id="forestSky">
+          <div class="forest-sun" id="forestSun">☀️</div>
+          <div class="forest-clouds" id="forestClouds"></div>
+        </div>
+        <div class="forest-ground" id="forestGround"></div>
+        <div class="forest-elements" id="forestElements"></div>
+      </div>
+      <div class="forest-legend card">
+        <h3>Forest Milestones</h3>
+        <div class="legend-grid" id="forestLegend"></div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════ ACHIEVEMENTS ═══════════════════ -->
+    <section class="tab-panel" id="tab-achievements">
+      <div class="page-header">
+        <h1 class="page-title">Badges & Achievements 🏅</h1>
+        <p class="page-subtitle">Track your milestones and unlock legendary status.</p>
+      </div>
+      <div class="achievements-progress card">
+        <span>Badges Earned: <strong id="badgesEarned">0</strong> / <strong id="badgesTotal">0</strong></span>
+        <div class="badges-progress-bar">
+          <div class="badges-progress-fill" id="badgesProgressFill"></div>
+        </div>
+      </div>
+      <div class="achievements-grid" id="achievementsGrid"></div>
+    </section>
+
+    <!-- ═══════════════════ TRENDS ═══════════════════ -->
+    <section class="tab-panel" id="tab-trends">
+      <div class="page-header">
+        <h1 class="page-title">Trends & Progress 📊</h1>
+      </div>
+
+      <div class="trends-time-filter">
+        <button class="filter-btn active" data-range="7">7 Days</button>
+        <button class="filter-btn" data-range="30">30 Days</button>
+        <button class="filter-btn" data-range="90">90 Days</button>
+      </div>
+
+      <div class="charts-grid">
+        <div class="card chart-card">
+          <h3 class="chart-title">XP Earned</h3>
+          <canvas id="xpChart"></canvas>
+        </div>
+        <div class="card chart-card">
+          <h3 class="chart-title">Tasks Completed</h3>
+          <canvas id="tasksChart"></canvas>
+        </div>
+        <div class="card chart-card">
+          <h3 class="chart-title">Category Breakdown</h3>
+          <canvas id="categoryChart"></canvas>
+        </div>
+        <div class="card chart-card">
+          <h3 class="chart-title">Streak History</h3>
+          <canvas id="streakChart"></canvas>
+        </div>
+      </div>
+
+      <div class="trends-summary card">
+        <h3>All-Time Summary</h3>
+        <div class="summary-stats">
+          <div class="summary-stat">
+            <div class="summary-icon">✅</div>
+            <div class="summary-val" id="summaryTotal">0</div>
+            <div class="summary-label">Total Tasks</div>
+          </div>
+          <div class="summary-stat">
+            <div class="summary-icon">✨</div>
+            <div class="summary-val" id="summaryXP">0</div>
+            <div class="summary-label">Total XP</div>
+          </div>
+          <div class="summary-stat">
+            <div class="summary-icon">🔥</div>
+            <div class="summary-val" id="summaryStreak">0</div>
+            <div class="summary-label">Best Streak</div>
+          </div>
+          <div class="summary-stat">
+            <div class="summary-icon">🎁</div>
+            <div class="summary-val" id="summaryRedeemed">0</div>
+            <div class="summary-label">Rewards Redeemed</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ════════════════════════════════════
+       MODALS
+  ════════════════════════════════════ -->
+
+  <!-- Add / Edit Task Modal -->
+  <div class="modal-overlay" id="taskModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="taskModalTitle">New Quest</h2>
+        <button class="modal-close" id="closeTaskModal">✕</button>
+      </div>
+      <div class="modal-body">
+        <label class="form-label">Quest Name</label>
+        <input class="form-input" id="taskName" type="text" placeholder="e.g. Drink 8 glasses of water" maxlength="80" />
+
+        <label class="form-label">Category</label>
+        <select class="form-input" id="taskCategory">
+          <option value="Health">🌿 Health</option>
+          <option value="Learning">📚 Learning</option>
+          <option value="Chores">🏠 Chores</option>
+          <option value="Fitness">💪 Fitness</option>
+          <option value="Creativity">🎨 Creativity</option>
+          <option value="Social">💬 Social</option>
+          <option value="Mindfulness">🧘 Mindfulness</option>
+          <option value="Other">🌟 Other</option>
+        </select>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">XP Reward</label>
+            <input class="form-input" id="taskXP" type="number" min="1" max="500" value="10" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Coin Reward</label>
+            <input class="form-input" id="taskCoins" type="number" min="1" max="200" value="5" />
+          </div>
+        </div>
+
+        <label class="form-label">Repeats</label>
+        <select class="form-input" id="taskRepeat">
+          <option value="daily">Daily</option>
+          <option value="weekly">Weekly</option>
+          <option value="once">One-time</option>
+        </select>
+
+        <label class="form-label">Notes (optional)</label>
+        <textarea class="form-input" id="taskNotes" rows="2" placeholder="Any extra details..."></textarea>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="deleteTaskBtn" style="display:none;color:var(--danger)">🗑 Delete</button>
+        <div class="modal-footer-right">
+          <button class="btn btn-ghost" id="cancelTaskModal">Cancel</button>
+          <button class="btn btn-primary" id="saveTask">Save Quest</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add / Edit Reward Modal -->
+  <div class="modal-overlay" id="rewardModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="rewardModalTitle">New Reward</h2>
+        <button class="modal-close" id="closeRewardModal">✕</button>
+      </div>
+      <div class="modal-body">
+        <label class="form-label">Reward Name</label>
+        <input class="form-input" id="rewardName" type="text" placeholder="e.g. Movie Night 🎬" maxlength="60" />
+
+        <label class="form-label">Description (optional)</label>
+        <input class="form-input" id="rewardDesc" type="text" placeholder="e.g. Pick any movie on Netflix" maxlength="100" />
+
+        <label class="form-label">Emoji Icon</label>
+        <input class="form-input" id="rewardIcon" type="text" placeholder="🎁" maxlength="4" />
+
+        <label class="form-label">Coin Cost</label>
+        <input class="form-input" id="rewardCost" type="number" min="1" max="9999" value="50" />
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="deleteRewardBtn" style="display:none;color:var(--danger)">🗑 Delete</button>
+        <div class="modal-footer-right">
+          <button class="btn btn-ghost" id="cancelRewardModal">Cancel</button>
+          <button class="btn btn-primary" id="saveReward">Save Reward</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm Redeem Modal -->
+  <div class="modal-overlay" id="redeemModal">
+    <div class="modal modal-sm">
+      <div class="modal-header">
+        <h2>Redeem Reward</h2>
+        <button class="modal-close" id="closeRedeemModal">✕</button>
+      </div>
+      <div class="modal-body" style="text-align:center">
+        <div class="redeem-icon" id="redeemIcon">🎁</div>
+        <h3 id="redeemName"></h3>
+        <p>This costs <strong id="redeemCost"></strong> coins.</p>
+        <p id="redeemBalance"></p>
+      </div>
+      <div class="modal-footer" style="justify-content:center">
+        <button class="btn btn-ghost" id="cancelRedeem">Cancel</button>
+        <button class="btn btn-accent" id="confirmRedeem">Redeem! 🎉</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="modal-overlay" id="settingsModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Settings ⚙️</h2>
+        <button class="modal-close" id="closeSettings">✕</button>
+      </div>
+      <div class="modal-body">
+        <label class="form-label">Your Name</label>
+        <input class="form-input" id="settingsName" type="text" placeholder="Adventurer" maxlength="30" />
+        <label class="form-label">Avatar</label>
+        <div class="avatar-picker" id="avatarPicker">
+          <button class="avatar-opt" data-av="🧝">🧝</button>
+          <button class="avatar-opt" data-av="🧙">🧙</button>
+          <button class="avatar-opt" data-av="🦸">🦸</button>
+          <button class="avatar-opt" data-av="🧚">🧚</button>
+          <button class="avatar-opt" data-av="🌸">🌸</button>
+          <button class="avatar-opt" data-av="🌻">🌻</button>
+          <button class="avatar-opt" data-av="🦊">🦊</button>
+          <button class="avatar-opt" data-av="🐉">🐉</button>
+          <button class="avatar-opt" data-av="🌙">🌙</button>
+          <button class="avatar-opt" data-av="⭐">⭐</button>
+        </div>
+        <div class="settings-danger-zone">
+          <h4>Data</h4>
+          <div class="danger-btns">
+            <button class="btn btn-ghost" id="exportDataBtn">📥 Export Data</button>
+            <button class="btn btn-ghost" id="importDataBtn">📤 Import Data</button>
+            <input type="file" id="importFileInput" accept=".json" style="display:none" />
+            <button class="btn btn-ghost" style="color:var(--danger)" id="resetDataBtn">🗑 Reset All Data</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer modal-footer-right">
+        <button class="btn btn-primary" id="saveSettings">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast / Achievement Pop-up -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Achievement Unlock Fanfare -->
+  <div class="achievement-fanfare" id="achievementFanfare" style="display:none">
+    <div class="fanfare-inner">
+      <div class="fanfare-icon" id="fanfareIcon">🏅</div>
+      <div class="fanfare-title">Badge Unlocked!</div>
+      <div class="fanfare-name" id="fanfareName"></div>
+    </div>
+  </div>
+
+  <!-- Level Up Fanfare -->
+  <div class="levelup-fanfare" id="levelupFanfare" style="display:none">
+    <div class="fanfare-inner">
+      <div class="fanfare-icon">⭐</div>
+      <div class="fanfare-title">Level Up!</div>
+      <div class="fanfare-name" id="levelupName"></div>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/forest.js"></script>
+  <script src="js/achievements.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
